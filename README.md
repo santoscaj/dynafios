@@ -1,5 +1,5 @@
 # dynafios
-
+Quick Entry Level challenge for Dynafios.
 
 ## Project setup
 This project is at the moment only set up in the frontend, so the following steps need to be performed in the `frontend` directory 
