@@ -1,28 +1,29 @@
-<template lang="pug">
-  div.main-div 
+<template lang="pug" > 
+  div.main-div(@click="setDefaults" )
     h1 WordPress Top Posts
-    div
+    .table-parent
       table.table
         thead
           tr
-            th.table id
-            th.table slug 
-            th.table status 
-            th.table title 
-            th.table creation date 
-        tbody( v-for="post in posts" :key="post.id" class="row" @click="()=>rend(post.id)" )
+            th.table-row.table-header id
+            th.table-row.table-header slug 
+            th.table-row.table-header status 
+            th.table-row.table-header title 
+            th.table-row.table-header creation date 
+        tbody( v-for="post in posts" :key="post.id" class="row" @click.stop="()=>rend(post.id)" )
           tr
-            td.table {{ post.id }}
-            td.table {{ post.slug }}
-            td.table {{ post.status }}
-            td.table {{ post.title }}
-            td.table {{ post.date.toLocaleString() }}
+            td.table-row( :class="{selectedTable:selectedId==post.id }" ) {{ post.id }}
+            td.table-row( :class="{selectedTable:selectedId==post.id }" ) {{ post.slug }}
+            td.table-row( :class="{selectedTable:selectedId==post.id }" ) {{ post.status }}
+            td.table-row( :class="{selectedTable:selectedId==post.id }" ) {{ post.title }}
+            td.table-row( :class="{selectedTable:selectedId==post.id }" ) {{ post.date.toLocaleString() }}
 
-    .link-area(v-if="!!selectedLink")
-      h1 link
-      a( :href="selectedLink" )  {{selectedLink}}
-
-    div(v-html="content")
+    h4 Page Content
+    .wp-content( @click.stop )
+      .link-area(v-if="!!selectedLink")
+        a( :href="selectedLink" )  {{selectedLink}}
+      p( v-else ) no content selected
+      div(v-html="content")
       
 </template>
 
@@ -44,11 +45,11 @@ interface Post{
 
 @Component
 export default class WordPressTable extends Vue {
-  @Prop() private msg!: string;
 
   postsURL="https://wordpress.org/news/wp-json/wp/v2/posts"
   postLimit = 10
 
+  selectedId=''
   selectedLink = ''
   content = ''
   posts : Post[] = []
@@ -58,10 +59,16 @@ export default class WordPressTable extends Vue {
     let post : Post = this.posts.find((x : Post)=>x.id==postId)
     let {link, content} = post
     let render = content.rendered
+    this.selectedId = post.id
     this.content = render
     this.selectedLink = link
   }
 
+  setDefaults(){
+    this.selectedId = ''
+    this.content = ''
+    this.selectedLink = ''
+  }
   created(){
     let params =  {
          page: 1,
@@ -87,20 +94,43 @@ export default class WordPressTable extends Vue {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style  lang="sass">
-.main-div
+<style  lang="sass" >
+.table
+  border-collapse: collapse
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2)
+
+.table-header
+  background: var( --dynafios-page-color-1)
+  color: var( --dynafios-page-color-2)
+
+.table-parent
   display: flex
-  flex-direction: columns
   justify-content: center
   align-items: center
-
 .row
   cursor: pointer
+
+.wp-content
+  display: flex
+  flex-direction: column
+  border: 1px solid var( --dynafios-page-color-1)
+  border-radius: 10px
+  margin: 20px
+  padding: 20px
+  justify-content: center
+  align-items: center
+  text-align: center
+  transition: all 0.3 ease
 
 .link-area
   display: flex
 
-.table
-  border: 1px solid red
+.table-row
+  padding: 6px
+  border: 1px solid var( --dynafios-page-color-1)
+  transition: all 0.1 ease
+
+.selectedTable
+  background: rgb(0,0,0,0.1) !important
 
 </style>
