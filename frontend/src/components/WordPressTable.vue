@@ -1,20 +1,22 @@
 <template lang="pug">
-  div hi there
-    table
-      thead
-        tr
-          th id
-          th slug 
-          th status 
-          th title 
-          th creation date 
-      tbody( v-for="post in posts" :key="post.id" class="row" @click="()=>rend(post.id)" )
-        tr
-          td {{ post.id }}
-          td {{ post.slug }}
-          td {{ post.status }}
-          td {{ post.title }}
-          td {{ post.date }}
+  div.main-div 
+    h1 WordPress Top Posts
+    div
+      table.table
+        thead
+          tr
+            th.table id
+            th.table slug 
+            th.table status 
+            th.table title 
+            th.table creation date 
+        tbody( v-for="post in posts" :key="post.id" class="row" @click="()=>rend(post.id)" )
+          tr
+            td.table {{ post.id }}
+            td.table {{ post.slug }}
+            td.table {{ post.status }}
+            td.table {{ post.title }}
+            td.table {{ post.date.toLocaleString() }}
 
     .link-area(v-if="!!selectedLink")
       h1 link
@@ -26,7 +28,19 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+interface Content{
+  rendered: string
+}
 
+interface Post{
+  id: number;
+  slug: string;
+  status: string;
+  title: string;
+  date: Date;
+  link: string;
+  content: Content  
+}
 
 @Component
 export default class WordPressTable extends Vue {
@@ -37,14 +51,14 @@ export default class WordPressTable extends Vue {
 
   selectedLink = ''
   content = ''
-  posts = []
+  posts : Post[] = []
 
   rend(postId: Number){
-    let post = this.posts.find(x=>x.id==postId)
-    let link = post.link
-    let content = post.content.rendered
-    if(!content || !link) return 
-    this.content = content
+    // @ts-ignore
+    let post : Post = this.posts.find((x : Post)=>x.id==postId)
+    let {link, content} = post
+    let render = content.rendered
+    this.content = render
     this.selectedLink = link
   }
 
@@ -67,16 +81,26 @@ export default class WordPressTable extends Vue {
        }
     })
       .then(response => response.json())
-      .then(data => this.posts = data );
+      .then(data => this.posts = data.map((post:Post)=>({...post, date: new Date(post.date)})) )
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style  lang="sass">
+.main-div
+  display: flex
+  flex-direction: columns
+  justify-content: center
+  align-items: center
+
 .row
   cursor: pointer
 
 .link-area
   display: flex
+
+.table
+  border: 1px solid red
+
 </style>
