@@ -1,6 +1,6 @@
 <template lang="pug" >
   #app
-    .header
+    .project-header
       h1 DYNAFIOS 
       p.secondary Dynafios Entry Developer Code Test
     #nav
@@ -21,6 +21,10 @@
   -moz-osx-font-smoothing: grayscale
   text-align: center
   color: #2c3e50
+
+.project-header
+  height: 100px
+  padding: 20px
 
 .secondary
   color: var(--dynafios-page-color-2)

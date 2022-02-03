@@ -5,18 +5,18 @@
       table.table
         thead
           tr
-            th.table-row.table-header id
-            th.table-row.table-header slug 
-            th.table-row.table-header status 
-            th.table-row.table-header title 
-            th.table-row.table-header creation date 
+            th.table-row-item.table-header id
+            th.table-row-item.table-header slug 
+            th.table-row-item.table-header status 
+            th.table-row-item.table-header title 
+            th.table-row-item.table-header creation date 
         tbody( v-for="post in posts" :key="post.id" class="row" @click.stop="()=>rend(post.id)" )
-          tr
-            td.table-row( :class="{selectedTable:selectedId==post.id }" ) {{ post.id }}
-            td.table-row( :class="{selectedTable:selectedId==post.id }" ) {{ post.slug }}
-            td.table-row( :class="{selectedTable:selectedId==post.id }" ) {{ post.status }}
-            td.table-row( :class="{selectedTable:selectedId==post.id }" ) {{ post.title }}
-            td.table-row( :class="{selectedTable:selectedId==post.id }" ) {{ post.date.toLocaleString() }}
+          tr.table-row()
+            td.table-row-item( :class="{selectedTable:selectedId==post.id }" ) {{ post.id }}
+            td.table-row-item( :class="{selectedTable:selectedId==post.id }" ) {{ post.slug }}
+            td.table-row-item( :class="{selectedTable:selectedId==post.id }" ) {{ post.status }}
+            td.table-row-item( :class="{selectedTable:selectedId==post.id }" ) {{ post.title }}
+            td.table-row-item( :class="{selectedTable:selectedId==post.id }" ) {{ post.date.toLocaleString() }}
 
     h4 Page Content
     .wp-content( @click.stop )
@@ -125,12 +125,17 @@ export default class WordPressTable extends Vue {
 .link-area
   display: flex
 
-.table-row
+.table-row-item
   padding: 6px
   border: 1px solid var( --dynafios-page-color-1)
   transition: all 0.1 ease
 
+.table-row:hover
+    background: rgb(0,0,0,0.1)
+
+
 .selectedTable
-  background: rgb(0,0,0,0.1) !important
+  background:  rgb(246, 138, 31, 0.9 ) !important
+  color: black
 
 </style>

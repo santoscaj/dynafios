@@ -1,7 +1,14 @@
 <template lang="pug">
   div
     h1 Google Maps
-      GmapMap#map( ref="mapRef" :center="{lat:latitude, lng: longitude}" )
+      .search-address-block
+        p.pick-title Pick a new address
+        .user-input
+          Input.input-field
+          Button( type="warning" shape="circle" icon="md-navigate" ).input-button
+            p locate
+      //- GmapMap#map( ref="mapRef" :center="{lat:latitude, lng: longitude}" )
+      #map( ref="mapRef" :center="{lat:latitude, lng: longitude}" )
 </template>
 
 <script lang="ts">
@@ -26,11 +33,37 @@ export default class MapComponent extends Vue {
 }
 </script>
 
-<style  lang="sass">
+<style  lang="sass" >
 .row
   cursor: pointer
 
 #map
   height: 400px
   width: 80%
+  background: lightgray
+  margin: 20px auto
+  border-radius: 5px
+  max-width: 800px
+
+.pick-title
+  font-size: 13px
+  padding: 2px
+  text-align: left
+
+.search-address-block
+  padding: 8px
+  border: 1px solid var(--dynafios-page-color-1)
+  max-width: 400px
+  margin: auto
+  border-radius: 5px
+
+.user-input
+  display: flex
+  justify-content: center
+  align-items: center
+
+.input-button
+  background: var(--dynafios-page-color-2)
+  border: 1px solid black
+
 </style>
