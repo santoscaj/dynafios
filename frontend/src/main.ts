@@ -20,15 +20,17 @@ Vue.component('Button', Button);
 Vue.component('Icon', Icon);
 Vue.component('Input', Input);
 
-let apiKey = process.env.VUE_APP_API_KEY
-console.log(apiKey) 
+// let apiKey = process.env.VUE_APP_API_KEY
+// let apiKey = process.env.VUE_APP_API_KEY
+// console.log(apiKey) 
 Vue.config.productionTip = false
-Vue.use(VueGoogleMaps, {
-  load: {
-    key: apiKey,
-    libraries: 'places',
-  },
- })
+// Vue.use(VueGoogleMaps, {
+//   load: {
+//     key: apiKey,
+//     libraries: 'places',
+//   },
+//  })
+
 
 new Vue({
   router,

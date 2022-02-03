@@ -4,9 +4,12 @@
       .search-address-block
         p.pick-title Pick a new address
         .user-input
-          Input.input-field
-          Button( type="warning" shape="circle" icon="md-navigate" ).input-button
+          Input.input-field( placeholder="longitude" type="number" number v-model="longitude" )
+          Input.input-field( placeholder="latitude" type="number" number v-model="latitude" )
+          Button( type="warning" shape="circle" icon="md-navigate" @click="locateInMap" ).input-button
             p locate
+          Button(  shape="circle" icon="md-refresh" @click="generateRandomLocation").input-button
+            p random
       //- GmapMap#map( ref="mapRef" :center="{lat:latitude, lng: longitude}" )
       #map( ref="mapRef" :center="{lat:latitude, lng: longitude}" )
 </template>
@@ -14,7 +17,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Modal from '@/components/Modal.vue'; // @ is an alias to /src
-
+import { Loader } from '@googlemaps/js-api-loader';
+import {Message} from 'view-design'
 
 @Component({
   components: {
@@ -24,12 +28,55 @@ import Modal from '@/components/Modal.vue'; // @ is an alias to /src
 export default class MapComponent extends Vue {
   latitude = -25.344
   longitude = 131.036
+  zoom = 8
+  google = null
+  map = null
 
-   mounted () {
-    this.$refs.mapRef.$mapPromise.then((map) => {
-      map.panTo({lat: this.latitude, lng: this.longitude})
-    })
-   }
+  returnRandomNumber(min, max){
+    let range = max - min
+    return Math.floor(Math.random() * (max - min + 1) + min)
+  }
+
+  generateRandomLocation(){
+    this.latitude = this.returnRandomNumber(-90,90)
+    this.longitude = this.returnRandomNumber(-180,180)
+  }
+
+  locateInMap(){
+    if(this.latitude > 90 || this.latitude < -90) return Message.error('ERROR Cannot locate. Latitude is out of bounds')
+    if(this.longitude > 180 || this.longitude < -180) return Message.error('ERROR Cannot locate. Longitude is out of bounds')
+    this.load()
+  }
+
+  loader = new Loader({
+    // apiKey: 'asd',
+    apiKey: process.env.VUE_APP_API_KEY,
+    // version: "weekly",
+    libraries: ["places"]
+  });
+  
+  get mapOptions(){
+  return {
+    center: {
+        lat: this.latitude,
+        lng: this.longitude
+      },
+      zoom: this.zoom
+    }
+  }
+
+  load(){
+      this.loader
+        .load()
+        .then((google) => {
+          new google.maps.Map(document.getElementById("map"), this.mapOptions);
+        })
+        .catch(e => console.error(e));
+  }
+  
+  mounted () {
+      this.load()
+  }
 }
 </script>
 
